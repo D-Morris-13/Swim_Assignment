@@ -3,6 +3,7 @@ package SwimClient;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import IO.IOInterface;
 import IO.NetworkIO;
@@ -10,9 +11,13 @@ import IO.StdIO;
 
 public class SwimClient {
     public static void main(String[] args) {
-        String hostName = InetAddress.getLoopbackAddress().toString();
+        String hostName = InetAddress.getLoopbackAddress().getHostAddress();
         int portNumber = 8080;
 
+        if(args.length == 1){
+            System.out.println("Bad arguments:\n\t-h : Host name\n\t-p : Port number");
+            System.exit(1);
+        }
         for(int i = 0; i < args.length - 1; ++i){
             if(args[i].equals("-h")){
                 hostName = args[i+1];
@@ -39,7 +44,7 @@ public class SwimClient {
 
             client.ListenToStdIO();
         }catch (IOException e) {
-            System.out.println("Exception caught when connect to port "
+            System.out.println("Exception caught when connecting to port "
                 + portNumber);
             System.out.println(e.getMessage());
         }
