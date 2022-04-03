@@ -15,7 +15,6 @@ public class TestNetworkIO {
                 serverInterface = ioServer.AcceptConnection();
                 clientInterface = new NetworkIO(clientSocket);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -113,4 +112,25 @@ public class TestNetworkIO {
         assert(listener.isAlive());
     }
 
+    @Test
+    void CanConnectMultipleClientsToSameServer(){
+        final int portNumber = 8084;
+        NetworkIOServer ioServer = new NetworkIOServer(portNumber);
+        NetworkIOPair[] ioPairs = {null, null, null, null, null};
+        for(int i = 0; i < 5; ++i){
+            ioPairs[i] = new NetworkIOPair(ioServer, portNumber);
+        }
+
+        String[] clientMessages = {null, null, null, null, null};
+        for(int i = 0; i < 5; ++i){
+            String clientMessage = "Message from client " + i;
+            ioPairs[i].clientInterface.SendMessage(clientMessage);
+            clientMessages[i] = clientMessage;
+        }
+
+        for(int i = 0; i < 5; ++i){
+            String message = ioPairs[i].serverInterface.GetNextMessage();
+            assert(message.equals(clientMessages[i]));
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package SwimClient;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import IO.IOInterface;
@@ -9,8 +10,21 @@ import IO.StdIO;
 
 public class SwimClient {
     public static void main(String[] args) {
-        String hostName = "127.0.0.1";// args[0];
-        int portNumber = 8080;// Integer.parseInt(args[1]);
+        String hostName = InetAddress.getLoopbackAddress().toString();
+        int portNumber = 8080;
+
+        for(int i = 0; i < args.length - 1; ++i){
+            if(args[i].equals("-h")){
+                hostName = args[i+1];
+                ++i;
+            }else if(args[i].equals("-p")){
+                portNumber = Integer.parseInt(args[i+1]);
+                ++i;
+            }else{
+                System.out.println("Bad arguments:\n\t-h : Host name\n\t-p : Port number");
+                System.exit(1);
+            }
+        }
 
         RunClient(hostName, portNumber);
     }
