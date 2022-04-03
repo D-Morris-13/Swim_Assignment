@@ -50,6 +50,8 @@ public class NetworkIO implements IOInterface {
     }
 
     private Socket socket;
+    // Closing an opened input or output stream closes the socked, so
+    // the reader and writer need to live as long as the socket.
     private BufferedReader listeningBuffer;
     private PrintWriter sendingWriter;
 }

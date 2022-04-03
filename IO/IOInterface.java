@@ -1,7 +1,7 @@
 package IO;
 
 public interface IOInterface {
-    // Can block until message is received.
+    // Can block until a message is received.
     public String GetNextMessage();
 
     public void SendMessage(String message);

@@ -3,7 +3,6 @@ package SwimClient;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import IO.IOInterface;
 import IO.NetworkIO;
@@ -40,6 +39,7 @@ public class SwimClient {
             IOInterface networkIO = new NetworkIO(socket);
             IOInterface stdIO = new StdIO();
 
+            // Spawns the thread to listen to the network input.
             SwimClient client = new SwimClient(networkIO, stdIO);
 
             client.ListenToStdIO();
@@ -50,14 +50,14 @@ public class SwimClient {
         }
     }
 
-    public SwimClient(IOInterface networkIO, IOInterface stdIO){
+    SwimClient(IOInterface networkIO, IOInterface stdIO){
         this.networkIO = networkIO;
         this.stdIO = stdIO;
 
         this.listener = new NetworkListener();
     }
 
-    public void ListenToStdIO(){
+    void ListenToStdIO(){
         while(listener.isAlive()){
             String message = stdIO.GetNextMessage();
             networkIO.SendMessage(message);

@@ -45,7 +45,7 @@ public class SwimServer{
             this.start();
         }
 
-        // Thread monitoring socket for incoming requests
+        // Thread monitoring network connection for incoming commands.
         public void run(){
             String message;
             while((message = clientIO.GetNextMessage()) != null){
@@ -119,6 +119,11 @@ public class SwimServer{
 
     private int value;
 
+    // SetValue and CloseConnection may be called by any ClientConnection thread.
+    // SetValue needs alone needs a lock to ensure that the most recent value received
+    // by a subscriber is the current server value.
+    // CloseConnection needs to share the lock to avoid having one thread editing
+    // the connections list as another is iterating over it.
     private void SetValue(int value){
         connectionListLock.lock();
         this.value = value;
